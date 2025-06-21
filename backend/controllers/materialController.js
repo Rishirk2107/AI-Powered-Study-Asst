@@ -2,15 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const Material = require('../models/Material');
 const Flashcard = require('../models/flashCard');
+const extractFlashcards=require('../utils/extractFlashcards');
 const { v4: uuidv4 } = require('uuid');
 
 let flidCounter = 1;
-const getFlashcardsFromAPI = async (fileId) => {
-  return [
-    { question: 'What is AI?', answer: 'Artificial Intelligence' },
-    { question: 'What is ML?', answer: 'Machine Learning' },
-  ];
-};
 
 exports.uploadMaterial = async (req, res) => {
   const { username } = req.body;
@@ -19,26 +14,29 @@ exports.uploadMaterial = async (req, res) => {
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
 
   const uniqueName = uuidv4();
-  const uploadDir = path.join(__dirname, '../uploads', uniqueName);
+  const uploadDir = path.join(__dirname, '../../uploads');
   fs.mkdirSync(uploadDir, { recursive: true });
 
-  const filePath = path.join(uploadDir, file.originalname);
+  const fileExtension = path.extname(file.originalname);
+  const newFileName = `${uniqueName}${fileExtension}`;
+  const filePath = path.join(uploadDir, newFileName);
+
   fs.writeFileSync(filePath, file.buffer);
 
   await Material.create({
     username,
-    file_id: uniqueName,
-    file_name: file.originalname,
+    file_id: newFileName,
+    file_name: file.originalname, 
   });
 
-  const flashcards = await getFlashcardsFromAPI(uniqueName);
+  const flashcards = await extractFlashcards('../uploads/'+newFileName);
 
   await Flashcard.create({
     flid: flidCounter++,
     username,
     file_id: uniqueName,
-    file_name: file.originalname,
-    flash_card: flashcards,
+    file_name: file.originalname, 
+    flash_card: flashcards['flashcards'],
     tags: [],
   });
 

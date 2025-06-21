@@ -1,0 +1,28 @@
+{
+  "flashcards": [
+    {
+      "question": "What is a force?",
+      "answer": "A force is a push or pull upon an object resulting from the object's interaction with another object."
+    },
+    {
+      "question": "What is a type of force that acts when two objects are in physical contact?",
+      "answer": "Contact Force"
+    },
+    {
+      "question": "What is the formula for calculating force?",
+      "answer": "Force (F) = mass (m) \u00d7 acceleration (a)"
+    },
+    {
+      "question": "What is pressure?",
+      "answer": "Pressure is defined as the force applied per unit area on the surface of an object."
+    },
+    {
+      "question": "What happens to pressure when the force increases?",
+      "answer": "It increases"
+    },
+    {
+      "question": "What happens to pressure when the area increases?",
+      "answer": "It decreases"
+    }
+  ]
+}
