@@ -6,6 +6,7 @@ import uvicorn
 
 from flashcard import generate_flashcards
 from qachatbot import process_document, process_prompt
+from generate_mcqs import generate_mcqs_from_pdf
 
 app = FastAPI()
 
@@ -27,7 +28,17 @@ class Message(BaseModel):
 def get_flashcards(request: FilePathRequest):
     print(request.Path)
     result = generate_flashcards(request.Path)
-    print(result)
+
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    
+    return result
+
+
+@app.post("/api/quizbot")
+def get_flashcards(request: FilePathRequest):
+    print(request.Path)
+    result = generate_mcqs_from_pdf(request.Path)
 
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])

@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const materialRoutes = require('./routes/materialRoutes');
 const flashcardRoutes = require('./routes/flashcardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const quizRoutes = require('./routes/quizRoutes');
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/materials', materialRoutes);
 app.use('/api/flashcards', flashcardRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/quiz', quizRoutes);
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
     app.listen(process.env.PORT, () =>

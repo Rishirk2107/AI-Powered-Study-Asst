@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex justify-between p-4 bg-gray-800 text-white dark:bg-black">
-      <Link to="/" className="font-bold">MERNAuth</Link>
+      <Link to="/" className="font-bold">Disha-Mitra</Link>
 
       <div className="flex items-center space-x-4">
         <Link to="/dashboard" className="hover:underline">Dashboard</Link>

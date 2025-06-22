@@ -1,7 +1,7 @@
 const express = require('express');
-const { uploadFile, askQuestion } = require('../controllers/chatController');
 const multer = require('multer');
 const path = require('path');
+const { uploadQuizPDF } = require('../controllers/quizController');
 
 const router = express.Router();
 
@@ -18,7 +18,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post('/upload', upload.single('file'), uploadFile);
-router.post('/ask', askQuestion);
+router.post('/upload', upload.single('file'), uploadQuizPDF);
 
 module.exports = router;
