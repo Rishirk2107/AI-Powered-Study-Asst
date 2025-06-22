@@ -104,7 +104,9 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 
 ### AI Services
 - **FastAPI** - Python-based AI service
-- **OpenAI API** - Advanced language models
+- **Sentence-Transformer** - parse data from vector index
+- **FAISS** - Vector index
+- **GROQ API** - Advanced language models
 - **PDF Processing** - Document analysis and extraction
 
 ### Database
@@ -181,7 +183,7 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 5. **Set up environment variables**
    ```bash
    cp .env.example .env
-   # Add your OpenAI API key and other configurations
+   # Add your groq API key and other configurations
    ```
 
 6. **Start the AI service**
@@ -249,12 +251,11 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 ```env
 PORT=5000
 JWT_SECRET=your-jwt-secret
-OPENAI_API_KEY=your-openai-api-key
+MONGO_URI=your-mongodb-uri
 ```
 
 #### AI Service (.env)
 ```env
-OPENAI_API_KEY=your-openai-api-key
-MODEL_NAME=gpt-3.5-turbo
-MAX_TOKENS=2000
+GROQ_API_KEY=your-groq-api-key
+HUGGING_FACE_TOKEN=huggingface-access-token
 ```
