@@ -14,17 +14,17 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-      const res = await fetch('http://localhost:5000/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
-      const data = await res.json();
-      if (res.ok) {
-        login(data.user, data.token);
-        navigate('/dashboard');
-      } else {
-        alert(data.error);
+    const res = await fetch('http://localhost:5000/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      login(data.user, data.token);
+      navigate('/dashboard');
+    } else {
+      alert(data.error);
       }
     } catch (error) {
       alert('Signup failed. Please try again.');
@@ -89,7 +89,7 @@ export default function Signup() {
             >
               {isLoading ? 'Creating account...' : 'Create Account'}
             </button>
-          </form>
+    </form>
           
           <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
             Already have an account?{' '}

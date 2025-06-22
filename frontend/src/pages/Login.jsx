@@ -13,18 +13,18 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
+    const res = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
 
-      const data = await res.json();
-      if (res.ok) {
-        login(data.user, data.token);
-        navigate('/dashboard');
-      } else {
-        alert(data.error);
+    const data = await res.json();
+    if (res.ok) {
+      login(data.user, data.token);
+      navigate('/dashboard');
+    } else {
+      alert(data.error);
       }
     } catch (error) {
       alert('Login failed. Please try again.');
@@ -44,28 +44,28 @@ export default function Login() {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email
               </label>
-              <input
-                type="email"
+        <input
+          type="email"
                 placeholder="Enter your email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                required
-              />
+          required
+        />
             </div>
             
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
-              <input
-                type="password"
+        <input
+          type="password"
                 placeholder="Enter your password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                required
-              />
+          required
+        />
             </div>
             
             <button 
@@ -75,7 +75,7 @@ export default function Login() {
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
-          </form>
+      </form>
           
           <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
             Don't have an account?{' '}

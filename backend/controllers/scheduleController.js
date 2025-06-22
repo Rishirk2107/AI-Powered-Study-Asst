@@ -1,6 +1,4 @@
 const Calendar = require('../models/Calendar');
-
-// Function to call GenAI FastAPI for schedule generation
 const generateAISchedule = async (userMessage) => {
   try {
     const response = await fetch('http://localhost:8000/api/schedule', {
@@ -34,21 +32,18 @@ exports.generateSchedule = async (req, res) => {
   }
 
   try {
-    // Call GenAI FastAPI to generate schedule
     const generatedSchedule = await generateAISchedule(userMessage);
     
     if (!Array.isArray(generatedSchedule)) {
       return res.status(500).json({ error: 'Invalid schedule format received from AI' });
     }
 
-    // Format the generated schedule
     const formatted = generatedSchedule.map(item => ({
       date: new Date(item.date),
       topic: item.topic,
       duration: Number(item.duration)
     }));
 
-    // Save to database
     let calendar = await Calendar.findOne({ userId });
 
     if (calendar) {

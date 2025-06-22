@@ -24,9 +24,9 @@ export default function Dashboard() {
         return;
       }
       
-      const data = await res.json();
+    const data = await res.json();
       if (Array.isArray(data)) {
-        setFlashcards(data.filter(card => card.username === user.username));
+    setFlashcards(data.filter(card => card.username === user.username));
       } else {
         console.error('Flashcards data is not an array:', data);
         setFlashcards([]);
@@ -52,9 +52,9 @@ export default function Dashboard() {
         return;
       }
       
-      const data = await res.json();
+    const data = await res.json();
       if (Array.isArray(data)) {
-        setMaterials(data.filter(mat => mat.username === user.username));
+    setMaterials(data.filter(mat => mat.username === user.username));
       } else {
         console.error('Materials data is not an array:', data);
         setMaterials([]);
@@ -94,8 +94,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token && user) {
-      fetchFlashcards();
-      fetchMaterials();
+    fetchFlashcards();
+    fetchMaterials();
     }
   }, [token, user]);
 

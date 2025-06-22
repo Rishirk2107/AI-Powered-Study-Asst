@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+
 const authMiddleware = require('./middleware/authMiddleware');
 
 const authRoutes = require('./routes/authRoutes');
@@ -17,10 +18,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Auth routes (no authentication required)
 app.use('/api/auth', authRoutes);
 
-// Protected routes (authentication required)
 app.use('/api/materials', authMiddleware, materialRoutes);
 app.use('/api/flashcards', authMiddleware, flashcardRoutes);
 app.use('/api/chat', authMiddleware, chatRoutes);

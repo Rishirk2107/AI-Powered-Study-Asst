@@ -23,41 +23,41 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 ## Screenshots
 
 ### Landing Page
-![Landing Page](screenshots/landing-page.png)
+![Landing Page](demo/screenshots/About.png)
 *Modern, responsive landing page showcasing the platform's features and capabilities*
 
 ### User Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](demo/screenshots/Dashboard.png)
 *Comprehensive dashboard displaying user progress, recent activities, and quick access to all features*
 
 ### AI Tools Interface
-![AI Tools](screenshots/ai-tools.png)
+![AI Tools](demo/screenshots/AI-Tools.png)
 *Centralized hub for all AI-powered features including flashcard generation, quiz creation, and chatbot access*
 
 ### Schedule Management
-![Schedule](screenshots/schedule.png)
+![Schedule](demo/screenshots/Schedule.png)
 *Interactive calendar interface with AI-generated study schedules and progress tracking*
 
 ### Quiz Generation & Taking
-![Quiz](screenshots/quiz.png)
+![Quiz](demo/screenshots/Quiz.png)
 *Dynamic quiz interface with AI-generated questions and real-time performance feedback*
 
 ### Flashcard Study Mode
-![Flashcards](screenshots/flashcards.png)
+![Flashcards](demo/screenshots/Flashcards.png)
 *Interactive flashcard system with spaced repetition and progress tracking*
 
 ### Chatbot Interface
-![Chatbot](screenshots/chatbot.png)
+![Chatbot](demo/screenshots/Chatbot.png)
 *AI-powered Q&A system for instant help with study materials*
 
 ### Profile & Settings
-![Profile](screenshots/profile.png)
+![Profile](demo/screenshots/Profile.png)
 *User profile management with preferences, progress history, and account settings*
 
 ## Demo Video
 
 ### Full Platform Walkthrough
-[![Demo Video](screenshots/demo-thumbnail.png)](https://your-demo-video-url.com)
+[![Demo Video](demo/video/demo.mp4)](https://your-demo-video-url.com)
 
 ## Features
 

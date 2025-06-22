@@ -9,9 +9,9 @@ import { ThemeProvider } from './context/ThemeContext';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <ThemeProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
     </ThemeProvider>
   </BrowserRouter>
 );
