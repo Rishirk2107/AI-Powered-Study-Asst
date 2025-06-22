@@ -43,7 +43,7 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 *Dynamic quiz interface with AI-generated questions and real-time performance feedback*
 
 ### Flashcard Study Mode
-![Flashcards](demo/screenshots/Flashcards.png)
+![Flashcards](demo/screenshots/FlashCard.png)
 *Interactive flashcard system with spaced repetition and progress tracking*
 
 ### Chatbot Interface
@@ -58,6 +58,7 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 
 ### Full Platform Walkthrough
 [![Demo Video](demo/screenshots/Dashboard.png)](https://youtu.be/ChcZE8gRiEE)
+### Link : https://youtu.be/ChcZE8gRiEE
 
 ## Features
 
