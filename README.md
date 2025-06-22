@@ -57,7 +57,7 @@ Disha-Mitra (meaning "Guide-Friend" in Sanskrit) is an innovative AI-powered stu
 ## Demo Video
 
 ### Full Platform Walkthrough
-![Demo Video](demo/video/demo.mp4)
+[![Demo Video](demo/screenshots/Dashboard.png)](https://youtu.be/ChcZE8gRiEE)
 
 ## Features
 
