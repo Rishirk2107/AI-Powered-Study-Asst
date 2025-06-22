@@ -7,6 +7,7 @@ import uvicorn
 from flashcard import generate_flashcards
 from qachatbot import process_document, process_prompt
 from generate_mcqs import generate_mcqs_from_pdf
+from generate_schedule import generate_schedule
 
 app = FastAPI()
 
@@ -20,6 +21,7 @@ app.add_middleware(
 
 class FilePathRequest(BaseModel):
     Path: str
+
 
 class Message(BaseModel):
     userMessage: str
@@ -44,6 +46,17 @@ def get_flashcards(request: FilePathRequest):
         raise HTTPException(status_code=400, detail=result["error"])
     
     return result
+
+@app.post("/api/schedule")
+def get_flashcards(request: Message):
+    print(request.userMessage)
+    result = generate_schedule(request.userMessage)
+
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    
+    return result
+
 
 @app.post("/api/chatbot/chat")
 async def process_message_route(message: Message):
