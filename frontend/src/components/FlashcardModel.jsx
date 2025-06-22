@@ -15,49 +15,75 @@ export default function FlashcardModal({ card, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded shadow-lg max-w-lg w-full relative">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
-        >
-          &times;
-        </button>
-
-        <h3 className="text-xl font-semibold text-blue-600 mb-4">
-          {card.file_name}
-        </h3>
-
-        <div className="mb-4">
-          <p><strong>Q:</strong> {card.flash_card[questionIndex].question}</p>
-
-          {!showAnswer ? (
-            <button
-              onClick={() => setShowAnswer(true)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Reveal Answer
-            </button>
-          ) : (
-            <p className="mt-4"><strong>A:</strong> {card.flash_card[questionIndex].answer}</p>
-          )}
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 className="text-xl font-semibold text-blue-600 dark:text-blue-400">
+            📚 {card.file_name}
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-red-500 text-2xl font-bold transition-colors"
+            aria-label="Close modal"
+          >
+            ×
+          </button>
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={goPrev}
-            disabled={questionIndex === 0}
-            className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded hover:bg-gray-400 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={goNext}
-            disabled={questionIndex === card.flash_card.length - 1}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            Next
-          </button>
+        {/* Content */}
+        <div className="p-6">
+          <div className="mb-6">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-4">
+              <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
+                Question {questionIndex + 1} of {card.flash_card.length}
+              </h4>
+              <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                {card.flash_card[questionIndex].question}
+              </p>
+            </div>
+
+            {!showAnswer ? (
+              <button
+                onClick={() => setShowAnswer(true)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200"
+              >
+                🎯 Reveal Answer
+              </button>
+            ) : (
+              <div className="bg-green-50 dark:bg-green-900 rounded-lg p-6 border border-green-200 dark:border-green-700">
+                <h4 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">
+                  Answer
+                </h4>
+                <p className="text-green-700 dark:text-green-300 text-lg leading-relaxed">
+                  {card.flash_card[questionIndex].answer}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="flex justify-between items-center">
+            <button
+              onClick={goPrev}
+              disabled={questionIndex === 0}
+              className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors duration-200"
+            >
+              ← Previous
+            </button>
+            
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {questionIndex + 1} / {card.flash_card.length}
+            </span>
+            
+            <button
+              onClick={goNext}
+              disabled={questionIndex === card.flash_card.length - 1}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors duration-200"
+            >
+              Next →
+            </button>
+          </div>
         </div>
       </div>
     </div>
