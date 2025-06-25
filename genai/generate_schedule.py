@@ -11,7 +11,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def generate_schedule(user_input: str):
     if not GROQ_API_KEY:
-        raise ValueError("❌ GROQ_API_KEY not found in environment variables.")
+        raise ValueError("GROQ_API_KEY not found in environment variables.")
 
     today = datetime.today().strftime("%Y-%m-%d")
     llm = ChatGroq(api_key=GROQ_API_KEY, model="llama3-70b-8192")
