@@ -6,7 +6,7 @@ exports.uploadFile = async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
     const filePath = path.resolve(req.file.path);
-    const response = await axios.post('https://api.byteblazeverse.space/api/chatbot/upload', {
+    const response = await axios.post('https://ai.byteblazeverse.space/api/chatbot/upload', {
       Path: filePath,
     });
 
@@ -25,7 +25,7 @@ exports.askQuestion = async (req, res) => {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'Message is required' });
 
-    const response = await axios.post('https://api.byteblazeverse.space/api/chatbot/chat', {
+    const response = await axios.post('https://ai.byteblazeverse.space/api/chatbot/chat', {
       userMessage: message,
     });
 

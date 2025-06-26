@@ -1,7 +1,7 @@
 const Calendar = require('../models/Calendar');
 const generateAISchedule = async (userMessage) => {
   try {
-    const response = await fetch('https://api.byteblazeverse.space/api/schedule', {
+    const response = await fetch('https://ai.byteblazeverse.space/api/schedule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
