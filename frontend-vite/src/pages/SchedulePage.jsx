@@ -13,7 +13,7 @@ export default function SchedulePage() {
   const [generatedSchedule, setGeneratedSchedule] = useState(null);
 
   useEffect(() => {
-    fetch('http://api.byteblazeverse.space/api/schedule', {
+    fetch('https://api.byteblazeverse.space/api/schedule', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -38,7 +38,7 @@ export default function SchedulePage() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch('http://api.byteblazeverse.space/api/schedule/generate', {
+      const response = await fetch('https://api.byteblazeverse.space/api/schedule/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export default function SchedulePage() {
       
       if (response.ok) {
         setGeneratedSchedule(data.schedule);
-        const updatedResponse = await fetch('http://api.byteblazeverse.space/api/schedule', {
+        const updatedResponse = await fetch('https://api.byteblazeverse.space/api/schedule', {
           headers: {
             'Authorization': `Bearer ${token}`
           }

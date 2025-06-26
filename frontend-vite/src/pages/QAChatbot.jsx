@@ -24,7 +24,7 @@ export default function QAChatbot() {
     formData.append('file', file);
     
     try {
-      const res = await fetch('http://api.byteblazeverse.space/api/chat/upload', {
+      const res = await fetch('https://api.byteblazeverse.space/api/chat/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -54,7 +54,7 @@ export default function QAChatbot() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://api.byteblazeverse.space/api/chat/ask', {
+      const res = await fetch('https://api.byteblazeverse.space/api/chat/ask', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

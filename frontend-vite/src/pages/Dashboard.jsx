@@ -11,7 +11,7 @@ export default function Dashboard() {
 
   const fetchFlashcards = async () => {
     try {
-      const res = await fetch('http://api.byteblazeverse.space/api/flashcards', {
+      const res = await fetch('https://api.byteblazeverse.space/api/flashcards', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -39,7 +39,7 @@ export default function Dashboard() {
 
   const fetchMaterials = async () => {
     try {
-      const res = await fetch('http://api.byteblazeverse.space/api/materials', {
+      const res = await fetch('https://api.byteblazeverse.space/api/materials', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -73,7 +73,7 @@ export default function Dashboard() {
     formData.append('file', file);
     formData.append('username', user.username);
 
-    const res = await fetch('http://api.byteblazeverse.space/api/materials/upload', {
+    const res = await fetch('https://api.byteblazeverse.space/api/materials/upload', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`

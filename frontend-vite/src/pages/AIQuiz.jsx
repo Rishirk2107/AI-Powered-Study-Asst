@@ -19,7 +19,7 @@ export default function AIQuiz() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://api.byteblazeverse.space/api/quiz/upload', {
+      const res = await fetch('https://api.byteblazeverse.space/api/quiz/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

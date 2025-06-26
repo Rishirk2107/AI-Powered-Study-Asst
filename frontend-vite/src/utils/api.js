@@ -1,5 +1,5 @@
 // API utility for making authenticated requests
-const API_BASE_URL = 'http://api.byteblazeverse.space/api';
+const API_BASE_URL = 'https://api.byteblazeverse.space/api';
 
 export const apiCall = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');

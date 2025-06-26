@@ -13,7 +13,7 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-    const res = await fetch('http://api.byteblazeverse.space/api/auth/login', {
+    const res = await fetch('https://api.byteblazeverse.space/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
