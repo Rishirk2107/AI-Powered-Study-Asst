@@ -80,6 +80,7 @@ async def process_document_route(request: FilePathRequest):
             "botResponse": "Thank you for providing your PDF document. I have analyzed it, so now you can ask me any questions regarding it!"
         }, status_code=200)
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail="There was an error processing your document.")
 
 
