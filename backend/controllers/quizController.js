@@ -8,7 +8,7 @@ exports.uploadQuizPDF = async (req, res) => {
     const filePath = path.resolve(req.file.path);
     console.log(filePath)
 
-    const response = await axios.post('http://loclhost:8000/api/quizbot/', {
+    const response = await axios.post('http://localhost:8000/api/quizbot/', {
       Path: filePath,
     });
 

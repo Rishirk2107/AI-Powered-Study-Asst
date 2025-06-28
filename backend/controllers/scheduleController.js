@@ -1,7 +1,7 @@
 const Calendar = require('../models/Calendar');
 const generateAISchedule = async (userMessage) => {
   try {
-    const response = await fetch('http://loclhost:8000/api/schedule', {
+    const response = await fetch('http://localhost:8000/api/schedule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
