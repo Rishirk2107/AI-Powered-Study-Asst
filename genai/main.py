@@ -28,7 +28,6 @@ class Message(BaseModel):
 
 @app.post("/api/flashcards")
 def get_flashcards(request: FilePathRequest):
-    print(request.Path)
     result = generate_flashcards(request.Path)
 
     if "error" in result:
@@ -39,7 +38,6 @@ def get_flashcards(request: FilePathRequest):
 
 @app.post("/api/quizbot")
 def get_flashcards(request: FilePathRequest):
-    print(request.Path)
     result = generate_mcqs_from_pdf(request.Path)
 
     if "error" in result:
@@ -49,7 +47,6 @@ def get_flashcards(request: FilePathRequest):
 
 @app.post("/api/schedule")
 def get_flashcards(request: Message):
-    print(request.userMessage)
     result = generate_schedule(request.userMessage)
 
     if "error" in result:
