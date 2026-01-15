@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const authMiddleware = require('./middleware/authMiddleware');
 
@@ -15,8 +16,32 @@ const scheduleRoutes = require('./routes/scheduleRoutes');
 dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://ai.rishinex.tech",
+      "https://rishinex.tech",
+      "https://apsa.py.rishinex.tech"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+
+// // 🔴 THIS IS CRITICAL
+// app.options("/*", cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
+
 
 app.use('/api/auth', authRoutes);
 
