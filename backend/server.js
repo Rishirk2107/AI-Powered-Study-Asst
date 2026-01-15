@@ -1,6 +1,10 @@
+const dotenv = require('dotenv');
+
+// Load environment variables FIRST, before any other requires
+dotenv.config();
+
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
@@ -13,7 +17,8 @@ const chatRoutes = require('./routes/chatRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 
-dotenv.config();
+// Log env var to confirm it was loaded
+console.log('[Server] GENAI_API_BASE_URL:', process.env.GENAI_API_BASE_URL || '(not set)');
 
 const app = express();
 

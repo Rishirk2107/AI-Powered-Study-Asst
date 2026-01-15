@@ -20,7 +20,9 @@ const axiosInstance = axios.create({
 // Optional: Add request/response interceptors for logging or error handling
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log(`[API Request] ${config.method.toUpperCase()} ${config.baseURL}${config.url}`);
+    const fullUrl = `${baseURL}${config.url}`;
+    console.log(`[API Request] ${config.method.toUpperCase()} ${fullUrl}`);
+    console.log(`[API Request] baseURL: ${baseURL}, config.url: ${config.url}`);
     return config;
   },
   (error) => {
@@ -31,7 +33,8 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log(`[API Response] ${response.status} ${response.config.url}`);
+    const fullUrl = `${baseURL}${response.config.url}`;
+    console.log(`[API Response] ${response.status} ${fullUrl}`);
     return response;
   },
   (error) => {
