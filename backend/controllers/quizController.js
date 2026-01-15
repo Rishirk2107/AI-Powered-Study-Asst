@@ -1,15 +1,23 @@
-const path = require('path');
 const axios = require('axios');
+const { v4: uuidv4 } = require('uuid');
+const { uploadFileToCloudinary } = require('../utils/cloudinaryUpload');
 
 exports.uploadQuizPDF = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const filePath = path.resolve(req.file.path);
-    console.log(filePath)
+    const uniqueName = uuidv4();
+    const fileExtension = require('path').extname(req.file.originalname);
+    const newFileName = `${uniqueName}${fileExtension}`;
+
+    // Upload file to Cloudinary
+    const cloudinaryResponse = await uploadFileToCloudinary(req.file.buffer, newFileName);
+    const fileUrl = cloudinaryResponse.secure_url;
+
+    console.log('Cloudinary URL:', fileUrl);
 
     const response = await axios.post('http://localhost:8000/api/quizbot/', {
-      Path: filePath,
+      Path: fileUrl,
     });
 
     console.log(response.data);

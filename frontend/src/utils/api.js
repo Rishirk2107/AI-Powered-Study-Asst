@@ -1,65 +1,35 @@
-// API utility for making authenticated requests
-const API_BASE_URL = 'http://localhost:5000/api';
+import axios from 'axios';
 
-export const apiCall = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('token');
-  
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` }),
-    ...options.headers
-  };
+const DEFAULT_BASE = 'http://localhost:5000/api';
+const baseURL = (typeof process !== 'undefined' && (process.env.REACT_APP_API_URL || process.env.VITE_API_URL)) || DEFAULT_BASE;
 
-  const config = {
-    ...options,
-    headers: defaultHeaders
-  };
+const api = axios.create({
+  baseURL,
+  headers: { 'Content-Type': 'application/json' }
+});
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-  
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(error.error || 'Request failed');
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
   }
-  
-  return response.json();
-};
+  return config;
+}, (error) => Promise.reject(error));
 
-// Helper functions for common HTTP methods
-export const apiGet = (endpoint) => apiCall(endpoint);
-export const apiPost = (endpoint, data) => apiCall(endpoint, {
-  method: 'POST',
-  body: JSON.stringify(data)
-});
-export const apiPut = (endpoint, data) => apiCall(endpoint, {
-  method: 'PUT',
-  body: JSON.stringify(data)
-});
-export const apiDelete = (endpoint) => apiCall(endpoint, {
-  method: 'DELETE'
-});
+export const apiGet = (endpoint, params) => api.get(endpoint, { params }).then(res => res.data);
+export const apiPost = (endpoint, data, config) => api.post(endpoint, data, config).then(res => res.data);
+export const apiPut = (endpoint, data, config) => api.put(endpoint, data, config).then(res => res.data);
+export const apiDelete = (endpoint, config) => api.delete(endpoint, config).then(res => res.data);
 
-// For file uploads
 export const apiUpload = async (endpoint, formData) => {
-  const token = localStorage.getItem('token');
-  
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    },
-    body: formData
+  const response = await api.post(endpoint, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
   });
-  
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(error.error || 'Upload failed');
-  }
-  
-  return response.json();
+  return response.data;
 };
 
-// Schedule-specific helpers
 export const generateAISchedule = (userMessage) => apiPost('/schedule/generate', { userMessage });
 export const getSchedule = () => apiGet('/schedule');
-export const saveSchedule = (schedule) => apiPost('/schedule/save', { schedule }); 
+export const saveSchedule = (schedule) => apiPost('/schedule/save', { schedule });
+
+export default api;

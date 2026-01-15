@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from flashcard import generate_flashcards
-from qachatbot import process_document, process_prompt
+# from qachatbot import process_document, process_prompt
 from generate_mcqs import generate_mcqs_from_pdf
 from generate_schedule import generate_schedule
 
@@ -55,29 +55,29 @@ def get_flashcards(request: Message):
     return result
 
 
-@app.post("/api/chatbot/chat")
-async def process_message_route(message: Message):
-    user_message = message.userMessage
+# @app.post("/api/chatbot/chat")
+# async def process_message_route(message: Message):
+#     user_message = message.userMessage
 
-    if not user_message:
-        raise HTTPException(status_code=400, detail="Please provide a message to process.")
+#     if not user_message:
+#         raise HTTPException(status_code=400, detail="Please provide a message to process.")
 
-    try:
-        bot_response = process_prompt(user_message)
-        return JSONResponse(content={"botResponse": bot_response}, status_code=200)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="There was an error processing your message.")
+#     try:
+#         bot_response = process_prompt(user_message)
+#         return JSONResponse(content={"botResponse": bot_response}, status_code=200)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail="There was an error processing your message.")
     
-@app.post("/api/chatbot/upload")
-async def process_document_route(request: FilePathRequest):
+# @app.post("/api/chatbot/upload")
+# async def process_document_route(request: FilePathRequest):
     
-    try:
-        process_document(request.Path)
-        return JSONResponse(content={
-            "botResponse": "Thank you for providing your PDF document. I have analyzed it, so now you can ask me any questions regarding it!"
-        }, status_code=200)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="There was an error processing your document.")
+#     try:
+#         process_document(request.Path)
+#         return JSONResponse(content={
+#             "botResponse": "Thank you for providing your PDF document. I have analyzed it, so now you can ask me any questions regarding it!"
+#         }, status_code=200)
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail="There was an error processing your document.")
 
 
 if __name__ == "__main__":
