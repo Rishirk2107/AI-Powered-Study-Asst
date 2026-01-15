@@ -1,14 +1,16 @@
 const axios = require('axios');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 /**
  * Axios instance for external API calls
  * Base URL is configurable via environment variables
+ * Note: dotenv.config() should be called in server.js before this module is imported
  */
+const baseURL = process.env.GENAI_API_BASE_URL || 'http://localhost:8000';
+
+console.log(`[AxiosInstance] Initialized with baseURL: ${baseURL}`);
+
 const axiosInstance = axios.create({
-  baseURL: process.env.GENAI_API_BASE_URL || 'http://localhost:8000',
+  baseURL: baseURL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
