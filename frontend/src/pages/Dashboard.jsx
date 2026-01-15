@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import FlashcardModal from '../components/FlashcardModel';
+import { apiGet, apiUpload } from '../utils/api';
 
 export default function Dashboard() {
   const { user, token } = useAuth();
@@ -9,24 +10,11 @@ export default function Dashboard() {
   const [file, setFile] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
 
-  const fetchFlashcards = async () => {
+  const fetchFlashcards = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/flashcards', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error('Flashcards fetch error:', errorData);
-        setFlashcards([]);
-        return;
-      }
-      
-    const data = await res.json();
+      const data = await apiGet('/flashcards');
       if (Array.isArray(data)) {
-    setFlashcards(data.filter(card => card.username === user.username));
+        setFlashcards(data.filter(card => card.username === user.username));
       } else {
         console.error('Flashcards data is not an array:', data);
         setFlashcards([]);
@@ -35,26 +23,13 @@ export default function Dashboard() {
       console.error('Error fetching flashcards:', error);
       setFlashcards([]);
     }
-  };
+  }, [user]);
 
-  const fetchMaterials = async () => {
+  const fetchMaterials = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/materials', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error('Materials fetch error:', errorData);
-        setMaterials([]);
-        return;
-      }
-      
-    const data = await res.json();
+      const data = await apiGet('/materials');
       if (Array.isArray(data)) {
-    setMaterials(data.filter(mat => mat.username === user.username));
+        setMaterials(data.filter(mat => mat.username === user.username));
       } else {
         console.error('Materials data is not an array:', data);
         setMaterials([]);
@@ -63,7 +38,7 @@ export default function Dashboard() {
       console.error('Error fetching materials:', error);
       setMaterials([]);
     }
-  };
+  }, [user]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -73,31 +48,23 @@ export default function Dashboard() {
     formData.append('file', file);
     formData.append('username', user.username);
 
-    const res = await fetch('http://localhost:5000/api/materials/upload', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData,
-    });
-
-    if (res.ok) {
+    try {
+      await apiUpload('/materials/upload', formData);
       alert('File uploaded successfully');
       setFile(null);
       await fetchFlashcards();
       await fetchMaterials();
-    } else {
-      const error = await res.json();
-      alert('Upload failed: ' + error.error);
+    } catch (error) {
+      alert('Upload failed: ' + (error?.response?.data?.error || error.message));
     }
   };
 
   useEffect(() => {
     if (token && user) {
-    fetchFlashcards();
-    fetchMaterials();
+      fetchFlashcards();
+      fetchMaterials();
     }
-  }, [token, user]);
+  }, [token, user, fetchFlashcards, fetchMaterials]);
 
   return (
     <div className="relative min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">

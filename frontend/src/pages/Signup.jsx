@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { apiPost } from '../utils/api';
 
 export default function Signup() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
@@ -14,20 +15,11 @@ export default function Signup() {
     setIsLoading(true);
     
     try {
-    const res = await fetch('http://localhost:5000/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    });
-    const data = await res.json();
-    if (res.ok) {
+      const data = await apiPost('/auth/signup', form);
       login(data.user, data.token);
       navigate('/dashboard');
-    } else {
-      alert(data.error);
-      }
     } catch (error) {
-      alert('Signup failed. Please try again.');
+      alert(error?.response?.data?.error || 'Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { apiUpload } from '../utils/api';
 
 export default function AIQuiz() {
   const { token } = useAuth();
@@ -19,20 +20,8 @@ export default function AIQuiz() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/quiz/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setQuestions(data.questions);
-      } else {
-        alert('Failed to generate quiz. Please try again.');
-      }
+      const data = await apiUpload('/quiz/upload', formData);
+      setQuestions(data.questions);
     } catch (error) {
       alert('Failed to generate quiz. Please try again.');
     } finally {

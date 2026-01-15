@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { apiUpload, apiPost } from '../utils/api';
 
 export default function QAChatbot() {
   const { token } = useAuth();
@@ -24,20 +25,9 @@ export default function QAChatbot() {
     formData.append('file', file);
     
     try {
-      const res = await fetch('http://localhost:5000/api/chat/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData,
-      });
-      
-      if (res.ok) {
-        setUploaded(true);
-        alert('File uploaded successfully! You can now ask questions.');
-      } else {
-        alert('Upload failed. Please try again.');
-      }
+      await apiUpload('/chat/upload', formData);
+      setUploaded(true);
+      alert('File uploaded successfully! You can now ask questions.');
     } catch (error) {
       alert('Upload failed. Please try again.');
     } finally {
@@ -54,18 +44,14 @@ export default function QAChatbot() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/chat/ask', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ message: input }),
-      });
-      
-      const data = await res.json();
-      const botMessage = { sender: 'bot', text: data.answer };
-      setMessages((prev) => [...prev, botMessage]);
+      try {
+        const data = await apiPost('/chat/ask', { message: input });
+        const botMessage = { sender: 'bot', text: data.answer };
+        setMessages((prev) => [...prev, botMessage]);
+      } catch (error) {
+        const errorMessage = { sender: 'bot', text: 'Sorry, I encountered an error. Please try again.' };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
     } catch (error) {
       const errorMessage = { sender: 'bot', text: 'Sorry, I encountered an error. Please try again.' };
       setMessages((prev) => [...prev, errorMessage]);

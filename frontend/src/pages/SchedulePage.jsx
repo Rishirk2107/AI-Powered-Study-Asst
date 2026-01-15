@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import { useAuth } from '../context/AuthContext';
 import '../styles/calendar.css';
+import { apiGet, apiPost } from '../utils/api';
 
 export default function SchedulePage() {
   const { token } = useAuth();
@@ -13,13 +14,15 @@ export default function SchedulePage() {
   const [generatedSchedule, setGeneratedSchedule] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/schedule', {
-      headers: {
-        'Authorization': `Bearer ${token}`
+    const load = async () => {
+      try {
+        const data = await apiGet('/schedule');
+        setSchedule(data);
+      } catch (error) {
+        console.error('Failed to load schedule:', error);
       }
-    })
-      .then(res => res.json())
-      .then(data => setSchedule(data));
+    };
+    load();
   }, [token]);
 
   const handleDayClick = (date) => {
@@ -38,30 +41,15 @@ export default function SchedulePage() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch('http://localhost:5000/api/schedule/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ userMessage })
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
+      try {
+        const data = await apiPost('/schedule/generate', { userMessage });
         setGeneratedSchedule(data.schedule);
-        const updatedResponse = await fetch('http://localhost:5000/api/schedule', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const updatedData = await updatedResponse.json();
+        const updatedData = await apiGet('/schedule');
         setSchedule(updatedData);
         setUserMessage('');
         alert('Schedule generated successfully!');
-      } else {
-        alert('Error generating schedule: ' + data.error);
+      } catch (error) {
+        alert('Error generating schedule: ' + (error?.response?.data?.error || error.message));
       }
     } catch (error) {
       console.error('Error generating schedule:', error);
