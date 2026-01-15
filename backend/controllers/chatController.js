@@ -1,7 +1,7 @@
 
-const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const { uploadFileToCloudinary } = require('../utils/cloudinaryUpload');
+const axiosInstance = require('../utils/axiosInstance');
 
 exports.uploadFile = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ exports.uploadFile = async (req, res) => {
     const cloudinaryResponse = await uploadFileToCloudinary(req.file.buffer, newFileName);
     const fileUrl = cloudinaryResponse.secure_url;
 
-    const response = await axios.post('http://localhost:8000/api/chatbot/upload', {
+    const response = await axiosInstance.post('/api/chatbot/upload', {
       Path: fileUrl,
     });
 
@@ -34,7 +34,7 @@ exports.askQuestion = async (req, res) => {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'Message is required' });
 
-    const response = await axios.post('http://localhost:8000/api/chatbot/chat', {
+    const response = await axiosInstance.post('/api/chatbot/chat', {
       userMessage: message,
     });
 

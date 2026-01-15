@@ -1,6 +1,6 @@
-const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const { uploadFileToCloudinary } = require('../utils/cloudinaryUpload');
+const axiosInstance = require('../utils/axiosInstance');
 
 exports.uploadQuizPDF = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ exports.uploadQuizPDF = async (req, res) => {
 
     console.log('Cloudinary URL:', fileUrl);
 
-    const response = await axios.post('http://localhost:8000/api/quizbot/', {
+    const response = await axiosInstance.post('/api/quizbot/', {
       Path: fileUrl,
     });
 

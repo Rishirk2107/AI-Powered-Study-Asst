@@ -1,22 +1,13 @@
 const Calendar = require('../models/Calendar');
+const axiosInstance = require('../utils/axiosInstance');
+
 const generateAISchedule = async (userMessage) => {
   try {
-    const response = await fetch('http://localhost:8000/api/schedule', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userMessage: userMessage
-      })
+    const response = await axiosInstance.post('/api/schedule', {
+      userMessage: userMessage
     });
 
-    if (!response.ok) {
-      throw new Error(`GenAI API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error calling GenAI API:', error);
     throw error;
