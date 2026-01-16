@@ -17,6 +17,9 @@ const chatRoutes = require('./routes/chatRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 
+// Initialize cron jobs
+require('./cronSchedule');
+
 // Log env var to confirm it was loaded
 console.log('[Server] GENAI_API_BASE_URL:', process.env.GENAI_API_BASE_URL || '(not set)');
 
