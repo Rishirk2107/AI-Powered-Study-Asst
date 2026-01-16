@@ -85,7 +85,7 @@ async def process_document_route(request: FilePathRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"There was an error processing your document: {e}")
 
-@app.get("/")
+@app.get("/health")
 def health():
     return {"status": "ok"}
 
