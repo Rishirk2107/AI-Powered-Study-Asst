@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import FlashcardModal from '../components/FlashcardModel';
 import { apiGet, apiUpload } from '../utils/api';
@@ -42,7 +43,7 @@ export default function Dashboard() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) return alert('Please select a file');
+    if (!file) return toast.error('Please select a file');
 
     const formData = new FormData();
     formData.append('file', file);
@@ -50,12 +51,12 @@ export default function Dashboard() {
 
     try {
       await apiUpload('/materials/upload', formData);
-      alert('File uploaded successfully');
+      toast.success('File uploaded successfully');
       setFile(null);
       await fetchFlashcards();
       await fetchMaterials();
     } catch (error) {
-      alert('Upload failed: ' + (error?.response?.data?.error || error.message));
+      toast.error('Upload failed: ' + (error?.response?.data?.error || error.message));
     }
   };
 

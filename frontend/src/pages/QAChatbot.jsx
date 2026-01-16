@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import ReactMarkdown from 'react-markdown';
+import toast from 'react-hot-toast';
+// import { useAuth } from '../context/AuthContext';
 import { apiUpload, apiPost } from '../utils/api';
 
 export default function QAChatbot() {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const [file, setFile] = useState(null);
   const [uploaded, setUploaded] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -18,7 +20,7 @@ export default function QAChatbot() {
 
   const handleFileUpload = async (e) => {
     e.preventDefault();
-    if (!file) return alert('Please select a file');
+    if (!file) return toast.error('Please select a file');
     
     setUploading(true);
     const formData = new FormData();
@@ -27,9 +29,9 @@ export default function QAChatbot() {
     try {
       await apiUpload('/chat/upload', formData);
       setUploaded(true);
-      alert('File uploaded successfully! You can now ask questions.');
+      toast.success('File uploaded successfully! You can now ask questions.');
     } catch (error) {
-      alert('Upload failed. Please try again.');
+      toast.error('Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -103,7 +105,11 @@ export default function QAChatbot() {
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white'
                   }`}
                 >
-                  {msg.text}
+                  {msg.sender === 'bot' ? (
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               </div>
             ))}

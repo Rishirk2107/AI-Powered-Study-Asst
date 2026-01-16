@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { apiUpload } from '../utils/api';
 
@@ -13,7 +14,7 @@ export default function AIQuiz() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) return alert('Please select a file');
+    if (!file) return toast.error('Please select a file');
 
     setLoading(true);
     const formData = new FormData();
@@ -23,7 +24,7 @@ export default function AIQuiz() {
       const data = await apiUpload('/quiz/upload', formData);
       setQuestions(data.questions);
     } catch (error) {
-      alert('Failed to generate quiz. Please try again.');
+      toast.error('Failed to generate quiz. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import '../styles/calendar.css';
-import { apiGet, apiPost } from '../utils/api';
+import { apiGet, apiPost, apiPut } from '../utils/api';
+ 
 
 export default function SchedulePage() {
   const { token } = useAuth();
@@ -26,8 +28,14 @@ export default function SchedulePage() {
   }, [token]);
 
   const handleDayClick = (date) => {
-    const clickedDate = date.toISOString().slice(0, 10);
-    const matched = schedule.filter(item => item.date.slice(0, 10) === clickedDate);
+    const matched = schedule.filter(item => {
+      const itemDate = new Date(item.date);
+      return (
+        itemDate.getFullYear() === date.getFullYear() &&
+        itemDate.getMonth() === date.getMonth() &&
+        itemDate.getDate() === date.getDate()
+      );
+    });
     setTopicsOnDate(matched);
     setValue(date);
   };
@@ -35,7 +43,7 @@ export default function SchedulePage() {
   const handleGenerateSchedule = async (e) => {
     e.preventDefault();
     if (!userMessage.trim()) {
-      alert('Please enter your study requirements');
+      toast.error('Please enter your study requirements');
       return;
     }
 
@@ -47,15 +55,36 @@ export default function SchedulePage() {
         const updatedData = await apiGet('/schedule');
         setSchedule(updatedData);
         setUserMessage('');
-        alert('Schedule generated successfully!');
+        toast.success('Schedule generated successfully!');
       } catch (error) {
-        alert('Error generating schedule: ' + (error?.response?.data?.error || error.message));
+        toast.error('Error generating schedule: ' + (error?.response?.data?.error || error.message));
       }
     } catch (error) {
       console.error('Error generating schedule:', error);
-      alert('Failed to generate schedule. Please try again.');
+      toast.error('Failed to generate schedule. Please try again.');
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+   // Mark a schedule entry as completed or not
+  const handleMarkCompleted = async (id, completed) => {
+    try {
+      await apiPut(`/schedule/${id}/completed`, { completed });
+      // Refresh schedule after update
+      const updatedData = await apiGet('/schedule');
+      setSchedule(updatedData);
+      // Also update topicsOnDate if open
+      setTopicsOnDate(updatedData.filter(item => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.getFullYear() === value.getFullYear() &&
+          itemDate.getMonth() === value.getMonth() &&
+          itemDate.getDate() === value.getDate()
+        );
+      }));
+    } catch (error) {
+      toast.error('Failed to update task status.');
     }
   };
 
@@ -93,7 +122,15 @@ export default function SchedulePage() {
 
         {/* Generated Schedule Preview */}
         {generatedSchedule && (
-          <div className="mb-8 bg-green-50 dark:bg-green-900 p-8 rounded-lg border border-green-200 dark:border-green-700">
+          <div className="mb-8 bg-green-50 dark:bg-green-900 p-8 rounded-lg border border-green-200 dark:border-green-700 relative">
+            {/* Close (X) button */}
+            <button
+              className="absolute top-4 right-4 text-green-800 dark:text-green-200 hover:text-red-600 dark:hover:text-red-400 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+              onClick={() => setGeneratedSchedule(null)}
+            >
+              &times;
+            </button>
             <h3 className="text-2xl font-semibold mb-6 text-green-800 dark:text-green-200">
               Newly Generated Schedule
             </h3>
@@ -123,9 +160,14 @@ export default function SchedulePage() {
               className="calendar-custom"
               tileContent={({ date, view }) => {
                 if (view === 'month') {
-                  const dayHasSchedule = schedule.some(
-                    (item) => item.date.slice(0, 10) === date.toISOString().slice(0, 10)
-                  );
+                  const dayHasSchedule = schedule.some((item) => {
+                    const itemDate = new Date(item.date);
+                    return (
+                      itemDate.getFullYear() === date.getFullYear() &&
+                      itemDate.getMonth() === date.getMonth() &&
+                      itemDate.getDate() === date.getDate()
+                    );
+                  });
                   return dayHasSchedule ? <div className="schedule-dot"></div> : null;
                 }
                 return null;
@@ -142,11 +184,39 @@ export default function SchedulePage() {
             </h3>
             <div className="grid gap-4">
               {topicsOnDate.map((item, idx) => (
-                <div key={idx} className="p-6 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
-                  <p className="font-semibold text-lg text-gray-800 dark:text-white">{item.topic}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                    Duration: {item.duration} hours
-                  </p>
+                <div key={idx} className="p-6 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 flex flex-col md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="font-semibold text-lg text-gray-800 dark:text-white">{item.topic}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      Duration: {item.duration} hours
+                    </p>
+                    <p className="text-xs mt-2">
+                      Status: {item.completed ? (
+                        <span className="text-green-600 dark:text-green-400 font-semibold">Completed</span>
+                      ) : item.delayed ? (
+                        <span className="text-red-600 dark:text-red-400 font-semibold">Delayed</span>
+                      ) : (
+                        <span className="text-yellow-600 dark:text-yellow-400 font-semibold">Pending</span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="mt-4 md:mt-0">
+                    {item.completed ? (
+                      <button
+                        className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed"
+                        disabled
+                      >
+                        Completed
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                        onClick={() => handleMarkCompleted(item._id, true)}
+                      >
+                        Mark as Completed
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

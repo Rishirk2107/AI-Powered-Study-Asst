@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';import toast from 'react-hot-toast';import { useAuth } from '../context/AuthContext';
 import { apiPost } from '../utils/api';
 
 export default function Login() {
@@ -18,7 +17,7 @@ export default function Login() {
       login(data.user, data.token);
       navigate('/dashboard');
     } catch (error) {
-      alert(error?.response?.data?.error || 'Login failed. Please try again.');
+      toast.error(error?.response?.data?.error || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

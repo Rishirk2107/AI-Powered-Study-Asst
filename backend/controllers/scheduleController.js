@@ -1,4 +1,29 @@
-const Calendar = require('../models/Calendar');
+// Mark a schedule entry as completed or not
+exports.markCompleted = async (req, res) => {
+  const { id } = req.params;
+  const { completed } = req.body;
+  const userId = req.user.userId;
+
+  if (typeof completed !== 'boolean') {
+    return res.status(400).json({ error: 'Completed must be boolean' });
+  }
+
+  try {
+    const schedule = await Schedule.findOneAndUpdate(
+      { _id: id, userId },
+      { completed },
+      { new: true }
+    );
+    if (!schedule) {
+      return res.status(404).json({ error: 'Schedule entry not found' });
+    }
+    res.json({ message: 'Schedule updated', schedule });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update schedule' });
+  }
+};
+const Schedule = require('../models/Calendar'); // Now Schedule model
 const axiosInstance = require('../utils/axiosInstance');
 
 const generateAISchedule = async (userMessage) => {
@@ -24,27 +49,24 @@ exports.generateSchedule = async (req, res) => {
 
   try {
     const generatedSchedule = await generateAISchedule(userMessage);
-    
+
     if (!Array.isArray(generatedSchedule)) {
       return res.status(500).json({ error: 'Invalid schedule format received from AI' });
     }
 
     const formatted = generatedSchedule.map(item => ({
+      userId,
       date: new Date(item.date),
       topic: item.topic,
-      duration: Number(item.duration)
+      duration: Number(item.duration),
+      completed: false,
+      delayed: false
     }));
 
-    let calendar = await Calendar.findOne({ userId });
+    // Insert all schedule entries for this user
+    await Schedule.insertMany(formatted);
 
-    if (calendar) {
-      calendar.entries.push(...formatted);
-      await calendar.save();
-    } else {
-      await Calendar.create({ userId, entries: formatted });
-    }
-
-    res.json({ 
+    res.json({
       message: 'Schedule generated and saved successfully',
       schedule: formatted
     });
@@ -56,7 +78,7 @@ exports.generateSchedule = async (req, res) => {
 
 exports.saveSchedule = async (req, res) => {
   const { schedule } = req.body;
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
 
   if (!Array.isArray(schedule)) {
     return res.status(400).json({ error: 'Valid schedule array required' });
@@ -64,19 +86,15 @@ exports.saveSchedule = async (req, res) => {
 
   try {
     const formatted = schedule.map(item => ({
+      userId,
       date: new Date(item.date),
       topic: item.topic,
-      duration: Number(item.duration)
+      duration: Number(item.duration),
+      completed: false,
+      delayed: false
     }));
 
-    let calendar = await Calendar.findOne({ userId });
-
-    if (calendar) {
-      calendar.entries.push(...formatted);
-      await calendar.save();
-    } else {
-      await Calendar.create({ userId, entries: formatted });
-    }
+    await Schedule.insertMany(formatted);
 
     res.json({ message: 'Schedule saved successfully' });
   } catch (err) {
@@ -86,11 +104,11 @@ exports.saveSchedule = async (req, res) => {
 };
 
 exports.getSchedule = async (req, res) => {
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
 
   try {
-    const calendar = await Calendar.findOne({ userId });
-    res.json(calendar ? calendar.entries : []);
+    const schedule = await Schedule.find({ userId });
+    res.json(schedule);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch schedule' });
