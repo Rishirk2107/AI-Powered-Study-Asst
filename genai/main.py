@@ -6,7 +6,7 @@ import uvicorn
 
 from flashcard import generate_flashcards
 from qachatbot import process_document, process_prompt
-from generate_mcqs import generate_mcqs_from_pdf
+from generate_mcqs import generate_mcqs_from_pdf, generate_mcqs_from_text
 from generate_schedule import generate_schedule
 
 app = FastAPI()
@@ -26,6 +26,10 @@ class FilePathRequest(BaseModel):
 class Message(BaseModel):
     userMessage: str
 
+
+class QuizPrompt(BaseModel):
+    prompt: str
+
 @app.post("/api/flashcards")
 def get_flashcards(request: FilePathRequest):
     result = generate_flashcards(request.Path)
@@ -43,6 +47,16 @@ def get_flashcards(request: FilePathRequest):
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     
+    return result
+
+
+@app.post("/api/quizbot/text")
+def get_quiz_from_text(request: QuizPrompt):
+    result = generate_mcqs_from_text(request.prompt)
+
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+
     return result
 
 @app.post("/api/schedule")
