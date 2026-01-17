@@ -27,11 +27,23 @@ MONTHS = [
     "july","august","september","october","november","december"
 ]
 
+DURATION_WORDS = [
+    "next","day","days","week","weeks","month","months"
+]
+
 def normalize_months(text: str) -> str:
     words = text.lower().split()
     corrected = []
     for word in words:
         match = get_close_matches(word, MONTHS, n=1, cutoff=0.7)
+        corrected.append(match[0] if match else word)
+    return " ".join(corrected)
+
+def normalize_duration_text(text: str) -> str:
+    words = text.lower().split()
+    corrected = []
+    for word in words:
+        match = get_close_matches(word, DURATION_WORDS, n=1, cutoff=0.8)
         corrected.append(match[0] if match else word)
     return " ".join(corrected)
 
@@ -89,6 +101,32 @@ Text:
 
 def calculate_total_days(user_input: str):
     today = datetime.today().date()
+    text = normalize_duration_text(user_input)
+
+    duration_match = re.search(
+        r"(next|for the next|for)\s+(\d+)\s+(day|days|week|weeks|month|months)",
+        text,
+    )
+    if duration_match:
+        count = int(duration_match.group(2))
+        unit = duration_match.group(3)
+        if "week" in unit:
+            return count * 7
+        if "month" in unit:
+            return count * 30
+        return count
+
+    duration_match_simple = re.search(
+        r"(next|for the next|for)\s+(day|days|week|weeks|month|months)",
+        text,
+    )
+    if duration_match_simple:
+        unit = duration_match_simple.group(2)
+        if "week" in unit:
+            return 7
+        if "month" in unit:
+            return 30
+        return 1
 
     end_date = extract_end_date(user_input)
     if not end_date:
@@ -96,7 +134,7 @@ def calculate_total_days(user_input: str):
 
     if not end_date:
         raise ValueError(
-            "❌ Couldn't understand the end date. Try like 'Feb 8' or '8 Feb'."
+            "❌ Couldn't understand the end date or duration (e.g. 'next 7 days')."
         )
 
     return (end_date - today).days + 1
