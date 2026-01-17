@@ -50,6 +50,8 @@ exports.generateSchedule = async (req, res) => {
   try {
     const generatedSchedule = await generateAISchedule(userMessage);
 
+    console.log('Generated Schedule:', generatedSchedule);
+
     if (!Array.isArray(generatedSchedule)) {
       return res.status(500).json({ error: 'Invalid schedule format received from AI' });
     }
@@ -59,6 +61,18 @@ exports.generateSchedule = async (req, res) => {
       date: new Date(item.date),
       topic: item.topic,
       duration: Number(item.duration),
+      details:
+        item.details ||
+        item.description ||
+        item.detail ||
+        null,
+      subtopics: Array.isArray(item.subtopics)
+        ? item.subtopics
+        : Array.isArray(item.sub_topics)
+        ? item.sub_topics
+        : Array.isArray(item.subTopics)
+        ? item.subTopics
+        : [],
       completed: false,
       delayed: false
     }));
@@ -90,6 +104,18 @@ exports.saveSchedule = async (req, res) => {
       date: new Date(item.date),
       topic: item.topic,
       duration: Number(item.duration),
+      details:
+        item.details ||
+        item.description ||
+        item.detail ||
+        null,
+      subtopics: Array.isArray(item.subtopics)
+        ? item.subtopics
+        : Array.isArray(item.sub_topics)
+        ? item.sub_topics
+        : Array.isArray(item.subTopics)
+        ? item.subTopics
+        : [],
       completed: false,
       delayed: false
     }));

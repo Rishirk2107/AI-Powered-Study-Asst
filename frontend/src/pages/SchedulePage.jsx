@@ -134,19 +134,31 @@ export default function SchedulePage() {
             <h3 className="text-2xl font-semibold mb-6 text-green-800 dark:text-green-200">
               Newly Generated Schedule
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {generatedSchedule.map((item, idx) => (
-                <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-                  <p className="font-semibold text-green-600 dark:text-green-400 text-lg">
-                    {new Date(item.date).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-700 dark:text-gray-300 mt-2">{item.topic}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    Duration: {item.duration} hours
-                  </p>
-                </div>
-              ))}
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {generatedSchedule.map((item, idx) => (
+                  <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <p className="font-semibold text-green-600 dark:text-green-400 text-lg">
+                      {new Date(item.date).toLocaleDateString()}
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 mt-2">{item.topic}</p>
+                    {item.details && (
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        {item.details}
+                      </p>
+                    )}
+                    {Array.isArray(item.subtopics) && item.subtopics.length > 0 && (
+                      <ul className="mt-2 text-sm text-gray-600 dark:text-gray-300 list-disc list-inside space-y-1">
+                        {item.subtopics.map((sub, i) => (
+                          <li key={i}>{sub}</li>
+                        ))}
+                      </ul>
+                    )}
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      Duration: {item.duration} hours
+                    </p>
+                  </div>
+                ))}
+              </div>
           </div>
         )}
 
@@ -185,8 +197,20 @@ export default function SchedulePage() {
             <div className="grid gap-4">
               {topicsOnDate.map((item, idx) => (
                 <div key={idx} className="p-6 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div>
+                  <div className="md:flex-1 md:pr-6">
                     <p className="font-semibold text-lg text-gray-800 dark:text-white">{item.topic}</p>
+                    {item.details && (
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        {item.details}
+                      </p>
+                    )}
+                    {Array.isArray(item.subtopics) && item.subtopics.length > 0 && (
+                      <ul className="mt-2 text-sm text-gray-600 dark:text-gray-300 list-disc list-inside space-y-1">
+                        {item.subtopics.map((sub, i) => (
+                          <li key={i}>{sub}</li>
+                        ))}
+                      </ul>
+                    )}
                     <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                       Duration: {item.duration} hours
                     </p>

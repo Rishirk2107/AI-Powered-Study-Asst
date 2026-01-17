@@ -130,6 +130,9 @@ def generate_schedule(user_input: str):
     today_str = datetime.today().strftime("%Y-%m-%d")
     total_days = calculate_total_days(user_input)
 
+    if total_days > 120:
+        total_days = 120
+
     result = client.chat.completions.create(
         model="moonshotai/kimi-k2-instruct-0905",
         response_format={"type": "json_object"},  # ✅ JSON MODE
@@ -145,6 +148,10 @@ Rules:
 - Start date: {today_str}
 - Each next entry increments by 1 calendar day
 - The schedule array MUST contain exactly {total_days} items
+- Each day must have:
+  - topic: short title
+  - details: 1 concise sentence on what will be covered
+  - subtopics: 2-4 very short bullet points for that day
 
 Return ONLY valid JSON in this exact shape:
 
@@ -153,6 +160,8 @@ Return ONLY valid JSON in this exact shape:
     {{
       "date": "YYYY-MM-DD",
       "topic": "Topic name",
+      "details": "One sentence summary for the day",
+      "subtopics": ["subtopic 1", "subtopic 2"],
       "duration": "number of hours"
     }}
   ]
