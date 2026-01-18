@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const DEFAULT_BASE = 'https://apsa.js.rishinex.tech/api';
+// const DEFAULT_BASE = 'https://apsa.js.rishinex.tech/api';
+const DEFAULT_BASE = 'http://localhost:5000/api';
 const baseURL = (typeof process !== 'undefined' && (process.env.REACT_APP_API_URL || process.env.VITE_API_URL)) || DEFAULT_BASE;
 
 const api = axios.create({

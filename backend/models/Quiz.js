@@ -16,7 +16,8 @@ const attemptSchema = new mongoose.Schema(
     submittedAt: { type: Date, default: Date.now },
     answers: { type: [answerSchema], default: [] },
     score: { type: Number, required: true },
-    accuracy: { type: Number, required: true }
+    accuracy: { type: Number, required: true },
+    durationSeconds: { type: Number }
   },
   { _id: true }
 );

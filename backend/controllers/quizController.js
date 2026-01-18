@@ -75,7 +75,7 @@ exports.generateQuizFromPrompt = async (req, res) => {
 
 exports.submitQuizAttempt = async (req, res) => {
   try {
-    const { quizId, answers } = req.body;
+    const { quizId, answers, durationSeconds } = req.body;
     const userId = req.user.userId;
 
     if (!quizId) {
@@ -124,7 +124,8 @@ exports.submitQuizAttempt = async (req, res) => {
       userId,
       answers: processedAnswers,
       score,
-      accuracy
+      accuracy,
+      durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : undefined
     });
 
     await quiz.save();
