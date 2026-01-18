@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +9,7 @@ import { apiGet, apiPost, apiPut } from '../utils/api';
 
 export default function SchedulePage() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [schedule, setSchedule] = useState([]);
   const [value, setValue] = useState(new Date());
   const [topicsOnDate, setTopicsOnDate] = useState([]);
@@ -86,6 +88,10 @@ export default function SchedulePage() {
     } catch (error) {
       toast.error('Failed to update task status.');
     }
+  };
+
+  const handleStudy = (id) => {
+    navigate(`/topic/${id}`);
   };
 
   return (
@@ -224,7 +230,7 @@ export default function SchedulePage() {
                       )}
                     </p>
                   </div>
-                  <div className="mt-4 md:mt-0">
+                  <div className="mt-4 md:mt-0 flex flex-col gap-2">
                     {item.completed ? (
                       <button
                         className="bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed"
@@ -240,6 +246,12 @@ export default function SchedulePage() {
                         Mark as Completed
                       </button>
                     )}
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                      onClick={() => handleStudy(item._id)}
+                    >
+                      Study
+                    </button>
                   </div>
                 </div>
               ))}

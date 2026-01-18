@@ -140,3 +140,29 @@ exports.getSchedule = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch schedule' });
   }
 };
+
+exports.getTopicContent = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  try {
+    const schedule = await Schedule.findOne({ _id: id, userId });
+
+    if (!schedule) {
+      return res.status(404).json({ error: 'Schedule entry not found' });
+    }
+
+    const payload = {
+      topic: schedule.topic,
+      details: schedule.details || '',
+      subtopics: Array.isArray(schedule.subtopics) ? schedule.subtopics : []
+    };
+
+    const response = await axiosInstance.post('/api/topic-content', payload);
+
+    return res.json(response.data);
+  } catch (err) {
+    console.error('Topic content generation error:', err);
+    return res.status(500).json({ error: 'Failed to generate topic content' });
+  }
+};

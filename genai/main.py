@@ -8,6 +8,7 @@ from flashcard import generate_flashcards
 from qachatbot import process_document, process_prompt
 from generate_mcqs import generate_mcqs_from_pdf, generate_mcqs_from_text
 from generate_schedule import generate_schedule
+from topic import generate_topic_content
 
 app = FastAPI()
 
@@ -29,6 +30,11 @@ class Message(BaseModel):
 
 class QuizPrompt(BaseModel):
     prompt: str
+
+class TopicRequest(BaseModel):
+    topic: str
+    details: str | None = None
+    subtopics: list[str] | None = None
 
 @app.post("/api/flashcards")
 def get_flashcards(request: FilePathRequest):
@@ -58,6 +64,19 @@ def get_quiz_from_text(request: QuizPrompt):
         raise HTTPException(status_code=400, detail=result["error"])
 
     return result
+
+
+@app.post("/api/topic-content")
+def get_topic_content(request: TopicRequest):
+    try:
+        data = generate_topic_content(
+            topic=request.topic,
+            details=request.details,
+            subtopics=request.subtopics,
+        )
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate topic content: {e}")
 
 @app.post("/api/schedule")
 def get_flashcards(request: Message):

@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import AITools from './pages/AITools';
 import QAChatbot from './pages/QAChatbot';
 import AIQuiz from './pages/AIQuiz';
+import TopicPage from './pages/TopicPage';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/topic/:id" element={<TopicPage />} />
           <Route path="/aitools" element={<AITools />} />
           <Route path="/aitools/chatbot" element={<QAChatbot />} />
           <Route path="/aitools/quiz" element={<AIQuiz />} />
